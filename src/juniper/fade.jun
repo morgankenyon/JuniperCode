@@ -1,3 +1,6 @@
+//Working through Elegoo example 2.2 RGB LED in Juniper
+//Attempting to fade an RGB LED through its three main colors, red => blue => green
+//work in progress
 module Fade
 open(Prelude, Io, Time)
 
