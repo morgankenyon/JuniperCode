@@ -1,4 +1,4 @@
-//Compiled on 8/27/2022 1:27:05 PM
+//Compiled on 8/27/2022 2:04:54 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -671,7 +671,7 @@ namespace CharList {}
 namespace StringM {}
 namespace Random {}
 namespace Color {}
-namespace Blink {}
+namespace Fade {}
 namespace List {
     using namespace Prelude;
 
@@ -735,7 +735,7 @@ namespace Color {
 
 }
 
-namespace Blink {
+namespace Fade {
     using namespace Prelude;
     using namespace Io;
     using namespace Time;
@@ -2394,12 +2394,12 @@ namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
 }
 
-namespace Blink {
-    juniper::unit loop();
+namespace Fade {
+    juniper::unit setup();
 }
 
-namespace Blink {
-    juniper::unit setup();
+namespace Fade {
+    juniper::unit loop();
 }
 
 namespace Prelude {
@@ -6972,49 +6972,72 @@ namespace Color {
     })());
 }
 
-namespace Blink {
-    uint16_t boardLed = ((uint16_t) 13);
+namespace Fade {
+    uint16_t blueLed = ((uint16_t) 3);
 }
 
-namespace Blink {
-    juniper::shared_ptr<juniper::records::recordt_1<uint32_t>> tState = Time::state();
+namespace Fade {
+    uint16_t greenLed = ((uint16_t) 5);
 }
 
-namespace Blink {
-    juniper::shared_ptr<Io::pinState> ledState = (juniper::shared_ptr<Io::pinState>(new Io::pinState(low())));
+namespace Fade {
+    uint16_t redLed = ((uint16_t) 6);
 }
 
-namespace Blink {
-    juniper::unit loop() {
+namespace Fade {
+    juniper::unit setup() {
         return (([&]() -> juniper::unit {
-            Prelude::sig<uint32_t> guid208 = Time::every(((uint32_t) 200), tState);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Prelude::sig<uint32_t> timerSig = guid208;
-            
-            Prelude::sig<Io::pinState> guid209 = Signal::foldP<uint32_t, Io::pinState, void>(juniper::function<void, Io::pinState(uint32_t,Io::pinState)>([](uint32_t currentTime, Io::pinState lastState) -> Io::pinState { 
-                return Io::toggle(lastState);
-             }), ledState, timerSig);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Prelude::sig<Io::pinState> ledSig = guid209;
-            
-            return Io::digOut(boardLed, ledSig);
+            Io::setPinMode(blueLed, Io::output());
+            Io::setPinMode(greenLed, Io::output());
+            Io::setPinMode(redLed, Io::output());
+            Io::digWrite(redLed, Io::low());
+            Io::digWrite(greenLed, Io::low());
+            return Io::digWrite(blueLed, Io::low());
         })());
     }
 }
 
-namespace Blink {
-    juniper::unit setup() {
-        return Io::setPinMode(boardLed, Io::output());
+namespace Fade {
+    juniper::unit loop() {
+        return (([&]() -> juniper::unit {
+            uint32_t guid208 = ((uint32_t) 25);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint32_t delayTime = guid208;
+            
+            uint8_t guid209 = ((uint8_t) 0);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint8_t redValue = guid209;
+            
+            uint8_t guid210 = ((uint8_t) 0);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint8_t blueValue = guid210;
+            
+            return (([&]() -> juniper::unit {
+                uint16_t guid211 = ((uint16_t) 0);
+                uint16_t guid212 = (((uint16_t) 255) - ((uint16_t) 1));
+                for (uint16_t i = guid211; i <= guid212; i++) {
+                    (([&]() -> juniper::unit {
+                        (redValue = (redValue + ((uint8_t) 1)));
+                        Io::anaWrite(redLed, redValue);
+                        Time::wait(delayTime);
+                        return juniper::unit();
+                    })());
+                }
+                return {};
+            })());
+        })());
     }
 }
 
 void setup() {
-    Blink::setup();
+    Fade::setup();
 }
 void loop() {
-    Blink::loop();
+    Fade::loop();
 }

@@ -3,6 +3,8 @@ A project to hold juniper arduino code
 
 ## Getting Started
 
+Lets get started with the basic `blink` example on Arduino.
+
 * Install [Juniper Compiler](https://www.juniper-lang.org/index.html)
   * Ensure you have access to the `Juniper.exe` executable on your cli.
   * Will need to modify environmental variables to get that setup
