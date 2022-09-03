@@ -1,4 +1,4 @@
-//Compiled on 9/3/2022 1:24:41 PM
+//Compiled on 9/3/2022 1:36:11 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -2396,10 +2396,6 @@ namespace Color {
 
 namespace Fade {
     juniper::unit fadeInFadeOut(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
-}
-
-namespace Fade {
-    juniper::unit fromRedToGreen(uint32_t delayTime);
 }
 
 namespace Fade {
@@ -7027,40 +7023,6 @@ namespace Fade {
 }
 
 namespace Fade {
-    juniper::unit fromRedToGreen(uint32_t delayTime) {
-        return (([&]() -> juniper::unit {
-            uint8_t guid212 = ((uint8_t) 255);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t redValue = guid212;
-            
-            uint8_t guid213 = ((uint8_t) 0);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t greenValue = guid213;
-            
-            return (([&]() -> juniper::unit {
-                uint16_t guid214 = ((uint16_t) 0);
-                uint16_t guid215 = (((uint16_t) 255) - ((uint16_t) 1));
-                for (uint16_t i = guid214; i <= guid215; i++) {
-                    (([&]() -> juniper::unit {
-                        (redValue = (redValue - ((uint8_t) 1)));
-                        (greenValue = (greenValue + ((uint8_t) 1)));
-                        Io::anaWrite(redLed, redValue);
-                        Io::anaWrite(greenLed, greenValue);
-                        Time::wait(delayTime);
-                        return juniper::unit();
-                    })());
-                }
-                return {};
-            })());
-        })());
-    }
-}
-
-namespace Fade {
     juniper::unit setup() {
         return (([&]() -> juniper::unit {
             Io::setPinMode(blueLed, Io::output());
@@ -7076,11 +7038,11 @@ namespace Fade {
 namespace Fade {
     juniper::unit loop() {
         return (([&]() -> juniper::unit {
-            uint32_t guid216 = ((uint32_t) 25);
+            uint32_t guid212 = ((uint32_t) 25);
             if (!(true)) {
                 juniper::quit<juniper::unit>();
             }
-            uint32_t delayTime = guid216;
+            uint32_t delayTime = guid212;
             
             fadeInFadeOut(delayTime, redLed, greenLed);
             fadeInFadeOut(delayTime, greenLed, blueLed);

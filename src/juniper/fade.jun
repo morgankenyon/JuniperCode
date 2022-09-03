@@ -22,6 +22,8 @@ fun fadeInFadeOut(delayTime: uint32, fadeOutLedPin: uint16, fadeInLedPin: uint16
     ) end
 )
 
+//Setup analog outputs
+//start red pin with high signal, so led is glowing red.
 fun setup() = (
     Io:setPinMode(blueLed, Io:output());
     Io:setPinMode(greenLed, Io:output());
@@ -31,6 +33,7 @@ fun setup() = (
     Io:digWrite(blueLed, Io:low())
 )
 
+//Each loop, will fade through each primary color of the RGB LED
 fun loop() = (
     let delayTime: uint32 = 25;
 
@@ -40,7 +43,7 @@ fun loop() = (
     //fade from green to blue
     fadeInFadeOut(delayTime, greenLed, blueLed);
 
-    //fade from blue to green
+    //fade from blue to red
     fadeInFadeOut(delayTime, blueLed, redLed);
     ()
 )
