@@ -8,6 +8,16 @@ let blueLed: uint16 = 3
 let greenLed: uint16 = 5
 let redLed: uint16 = 6
 
+fun turnToRed(delayTime: uint32) = (
+    let mutable redValue: uint8 = 0;
+    for i : uint16 in 0u16 to 255 - 1 do (
+        set redValue = redValue + 1;
+        Io:anaWrite(redLed, redValue);
+        Time:wait(delayTime);
+        ()
+    ) end
+)
+
 fun setup() = (
     Io:setPinMode(blueLed, Io:output());
     Io:setPinMode(greenLed, Io:output());
@@ -19,22 +29,13 @@ fun setup() = (
 
 fun loop() = (
     let delayTime: uint32 = 25;
-    let mutable redValue: uint8 = 0;
     let mutable blueValue: uint8 = 0;
 
     //slowly turn on red led
-    for i : uint16 in 0u16 to 255 - 1 do (
-        set redValue = redValue + 1;
-        Io:anaWrite(redLed, redValue);
-        Time:wait(delayTime);
-        ()
-    ) end
+    turnToRed(delayTime);
 
-    //PROBLEM: Adding second loop causes first loop to have some compile error
-    //Something to do with line 28, but I can't figure it out for now.
-    //turn off red led
-    //Io:anaWrite(redLed, 0);
-    //()
+    Io:anaWrite(redLed, 0);
+    ()
 
     // //slowly turn on blue led
     // for i : uint16 in 0u16 to 255 - 1 do (
