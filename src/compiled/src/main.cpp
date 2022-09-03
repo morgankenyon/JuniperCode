@@ -1,4 +1,4 @@
-//Compiled on 8/27/2022 2:04:54 PM
+//Compiled on 9/3/2022 1:36:11 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -2392,6 +2392,10 @@ namespace Color {
 
 namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
+}
+
+namespace Fade {
+    juniper::unit fadeInFadeOut(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
 }
 
 namespace Fade {
@@ -6985,12 +6989,46 @@ namespace Fade {
 }
 
 namespace Fade {
+    juniper::unit fadeInFadeOut(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin) {
+        return (([&]() -> juniper::unit {
+            uint8_t guid208 = ((uint8_t) 255);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint8_t fadeOutValue = guid208;
+            
+            uint8_t guid209 = ((uint8_t) 0);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint8_t fadeInValue = guid209;
+            
+            return (([&]() -> juniper::unit {
+                uint16_t guid210 = ((uint16_t) 0);
+                uint16_t guid211 = (((uint16_t) 255) - ((uint16_t) 1));
+                for (uint16_t i = guid210; i <= guid211; i++) {
+                    (([&]() -> juniper::unit {
+                        (fadeOutValue = (fadeOutValue - ((uint8_t) 1)));
+                        (fadeInValue = (fadeInValue + ((uint8_t) 1)));
+                        Io::anaWrite(fadeOutLedPin, fadeOutValue);
+                        Io::anaWrite(fadeInLedPin, fadeInValue);
+                        Time::wait(delayTime);
+                        return juniper::unit();
+                    })());
+                }
+                return {};
+            })());
+        })());
+    }
+}
+
+namespace Fade {
     juniper::unit setup() {
         return (([&]() -> juniper::unit {
             Io::setPinMode(blueLed, Io::output());
             Io::setPinMode(greenLed, Io::output());
             Io::setPinMode(redLed, Io::output());
-            Io::digWrite(redLed, Io::low());
+            Io::digWrite(redLed, Io::high());
             Io::digWrite(greenLed, Io::low());
             return Io::digWrite(blueLed, Io::low());
         })());
@@ -7000,37 +7038,16 @@ namespace Fade {
 namespace Fade {
     juniper::unit loop() {
         return (([&]() -> juniper::unit {
-            uint32_t guid208 = ((uint32_t) 25);
+            uint32_t guid212 = ((uint32_t) 25);
             if (!(true)) {
                 juniper::quit<juniper::unit>();
             }
-            uint32_t delayTime = guid208;
+            uint32_t delayTime = guid212;
             
-            uint8_t guid209 = ((uint8_t) 0);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t redValue = guid209;
-            
-            uint8_t guid210 = ((uint8_t) 0);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t blueValue = guid210;
-            
-            return (([&]() -> juniper::unit {
-                uint16_t guid211 = ((uint16_t) 0);
-                uint16_t guid212 = (((uint16_t) 255) - ((uint16_t) 1));
-                for (uint16_t i = guid211; i <= guid212; i++) {
-                    (([&]() -> juniper::unit {
-                        (redValue = (redValue + ((uint8_t) 1)));
-                        Io::anaWrite(redLed, redValue);
-                        Time::wait(delayTime);
-                        return juniper::unit();
-                    })());
-                }
-                return {};
-            })());
+            fadeInFadeOut(delayTime, redLed, greenLed);
+            fadeInFadeOut(delayTime, greenLed, blueLed);
+            fadeInFadeOut(delayTime, blueLed, redLed);
+            return juniper::unit();
         })());
     }
 }
