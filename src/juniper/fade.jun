@@ -1,5 +1,5 @@
 //Working through Elegoo example 2.2 RGB LED in Juniper
-//Attempting to fade an RGB LED through its three main colors, red => blue => green
+//Fading a RGB LED through its three main colors, red => green => blue, and repeat
 //work in progress
 module Fade
 open(Prelude, Io, Time)
@@ -8,11 +8,15 @@ let blueLed: uint16 = 3
 let greenLed: uint16 = 5
 let redLed: uint16 = 6
 
-fun turnToRed(delayTime: uint32) = (
-    let mutable redValue: uint8 = 0;
+//parameterized function, takes Led pin to slowly fade out, and one Led pin to slowly fade in
+fun fadeInFadeOut(delayTime: uint32, fadeOutLedPin: uint16, fadeInLedPin: uint16) = (
+    let mutable fadeOutValue: uint8 = 255;
+    let mutable fadeInValue: uint8 = 0;
     for i : uint16 in 0u16 to 255 - 1 do (
-        set redValue = redValue + 1;
-        Io:anaWrite(redLed, redValue);
+        set fadeOutValue = fadeOutValue - 1;
+        set fadeInValue = fadeInValue + 1;
+        Io:anaWrite(fadeOutLedPin, fadeOutValue);
+        Io:anaWrite(fadeInLedPin, fadeInValue);
         Time:wait(delayTime);
         ()
     ) end
@@ -22,29 +26,21 @@ fun setup() = (
     Io:setPinMode(blueLed, Io:output());
     Io:setPinMode(greenLed, Io:output());
     Io:setPinMode(redLed, Io:output());
-    Io:digWrite(redLed, Io:low());
+    Io:digWrite(redLed, Io:high());
     Io:digWrite(greenLed, Io:low());
     Io:digWrite(blueLed, Io:low())
 )
 
 fun loop() = (
     let delayTime: uint32 = 25;
-    let mutable blueValue: uint8 = 0;
 
-    //slowly turn on red led
-    turnToRed(delayTime);
+    //fade from red to green
+    fadeInFadeOut(delayTime, redLed, greenLed);
 
-    Io:anaWrite(redLed, 0);
+    //fade from green to blue
+    fadeInFadeOut(delayTime, greenLed, blueLed);
+
+    //fade from blue to green
+    fadeInFadeOut(delayTime, blueLed, redLed);
     ()
-
-    // //slowly turn on blue led
-    // for i : uint16 in 0u16 to 255 - 1 do (
-    //     set blueValue = blueValue + 1;
-    //     Io:anaWrite(blueLed, blueValue);
-    //     Time:wait(delayTime);
-    //     ()
-    // ) end
-
-    // //turn off blue led
-    // Io:anaWrite(blueLed, 0);
 )
