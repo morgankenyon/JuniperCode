@@ -1,6 +1,8 @@
 # JuniperCode
 
-A project to hold juniper arduino code. The [Juniper Programming Language](https://www.juniper-lang.org/index.html) is a functional programming language aimed at making arduino programming easier.
+The [Juniper Programming Language](https://www.juniper-lang.org/index.html) is a functional programming language aimed at making arduino programming easier.
+
+This repo will hold working Juniper examples for anyone looking to get started using Juniper for Arduino.
 
 ## Getting Started
 
