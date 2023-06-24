@@ -1,4 +1,4 @@
-//Compiled on 9/10/2022 7:30:54 PM
+//Compiled on 6/24/2023 1:12:36 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -671,7 +671,7 @@ namespace CharList {}
 namespace StringM {}
 namespace Random {}
 namespace Color {}
-namespace ButtonDebounce {}
+namespace Fade {}
 namespace List {
     using namespace Prelude;
 
@@ -735,10 +735,10 @@ namespace Color {
 
 }
 
-namespace ButtonDebounce {
+namespace Fade {
     using namespace Prelude;
-    using namespace Button;
     using namespace Io;
+    using namespace Time;
 
 }
 
@@ -2394,12 +2394,16 @@ namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
 }
 
-namespace ButtonDebounce {
-    juniper::unit loop();
+namespace Fade {
+    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
 }
 
-namespace ButtonDebounce {
+namespace Fade {
     juniper::unit setup();
+}
+
+namespace Fade {
+    juniper::unit loop();
 }
 
 namespace Prelude {
@@ -6972,67 +6976,85 @@ namespace Color {
     })());
 }
 
-namespace ButtonDebounce {
-    uint16_t buttonPin = ((uint16_t) 9);
+namespace Fade {
+    uint16_t blueLed = ((uint16_t) 3);
 }
 
-namespace ButtonDebounce {
-    uint16_t ledPin = ((uint16_t) 5);
+namespace Fade {
+    uint16_t greenLed = ((uint16_t) 5);
 }
 
-namespace ButtonDebounce {
-    juniper::shared_ptr<juniper::records::recordt_2<Io::pinState, uint32_t, Io::pinState>> bState = Button::state();
+namespace Fade {
+    uint16_t redLed = ((uint16_t) 6);
 }
 
-namespace ButtonDebounce {
-    juniper::shared_ptr<Io::pinState> edgeState = (juniper::shared_ptr<Io::pinState>(new Io::pinState(Io::low())));
-}
-
-namespace ButtonDebounce {
-    juniper::shared_ptr<Io::pinState> ledState = (juniper::shared_ptr<Io::pinState>(new Io::pinState(Io::high())));
-}
-
-namespace ButtonDebounce {
-    juniper::unit loop() {
+namespace Fade {
+    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin) {
         return (([&]() -> juniper::unit {
-            Prelude::sig<Io::pinState> guid208 = Io::digIn(buttonPin);
+            uint8_t guid208 = ((uint8_t) 255);
             if (!(true)) {
                 juniper::quit<juniper::unit>();
             }
-            Prelude::sig<Io::pinState> buttonSig = guid208;
+            uint8_t fadeOutValue = guid208;
             
-            Prelude::sig<juniper::unit> guid209 = Io::fallingEdge(Button::debounce(buttonSig, bState), edgeState);
+            uint8_t guid209 = ((uint8_t) 0);
             if (!(true)) {
                 juniper::quit<juniper::unit>();
             }
-            Prelude::sig<juniper::unit> debouncedSig = guid209;
+            uint8_t fadeInValue = guid209;
             
-            Prelude::sig<Io::pinState> guid210 = Signal::foldP<juniper::unit, Io::pinState, void>(juniper::function<void, Io::pinState(juniper::unit,Io::pinState)>([](juniper::unit event, Io::pinState currentLedState) -> Io::pinState { 
-                return Io::toggle(currentLedState);
-             }), ledState, debouncedSig);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Prelude::sig<Io::pinState> ledSig = guid210;
-            
-            return Io::digOut(ledPin, ledSig);
+            return (([&]() -> juniper::unit {
+                uint16_t guid210 = ((uint16_t) 0);
+                uint16_t guid211 = (((uint16_t) 255) - ((uint16_t) 1));
+                for (uint16_t i = guid210; i <= guid211; i++) {
+                    (([&]() -> juniper::unit {
+                        (fadeOutValue = (fadeOutValue - ((uint8_t) 1)));
+                        (fadeInValue = (fadeInValue + ((uint8_t) 1)));
+                        Io::anaWrite(fadeOutLedPin, fadeOutValue);
+                        Io::anaWrite(fadeInLedPin, fadeInValue);
+                        Time::wait(delayTime);
+                        return juniper::unit();
+                    })());
+                }
+                return {};
+            })());
         })());
     }
 }
 
-namespace ButtonDebounce {
+namespace Fade {
     juniper::unit setup() {
         return (([&]() -> juniper::unit {
-            Io::setPinMode(ledPin, Io::output());
-            Io::setPinMode(buttonPin, Io::input());
-            return Io::digWrite(ledPin, (*((ledState).get())));
+            Io::setPinMode(blueLed, Io::output());
+            Io::setPinMode(greenLed, Io::output());
+            Io::setPinMode(redLed, Io::output());
+            Io::digWrite(redLed, Io::high());
+            Io::digWrite(greenLed, Io::low());
+            return Io::digWrite(blueLed, Io::low());
+        })());
+    }
+}
+
+namespace Fade {
+    juniper::unit loop() {
+        return (([&]() -> juniper::unit {
+            uint32_t guid212 = ((uint32_t) 25);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            uint32_t delayTime = guid212;
+            
+            fadeOutFadeIn(delayTime, redLed, greenLed);
+            fadeOutFadeIn(delayTime, greenLed, blueLed);
+            fadeOutFadeIn(delayTime, blueLed, redLed);
+            return juniper::unit();
         })());
     }
 }
 
 void setup() {
-    ButtonDebounce::setup();
+    Fade::setup();
 }
 void loop() {
-    ButtonDebounce::loop();
+    Fade::loop();
 }

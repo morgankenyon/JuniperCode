@@ -8,7 +8,7 @@ let tState = Time:state()
 let ledState = ref low()
 
 fun loop() = (
-    let timerSig = Time:every(200, tState);
+    let timerSig = Time:every(1000, tState);
     let ledSig =
         Signal:foldP(
             fn (currentTime, lastState) ->
