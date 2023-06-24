@@ -1,0 +1,65 @@
+//This program is a simple circuit, with switch and an led.
+//Whenever the switch is pressed, it toggles the state of the let
+module Blink
+open(Prelude, Io, Time, Button)
+
+//I had to include this
+let ledPin: uint16 = 5
+let buttonPin: uint16 = 9
+
+let bState = Button:state()
+let edgeState = ref Io:low()
+let letState = ref Io:high()
+
+fun setup() = (
+    Io:setPinMode(ledPin, Io:output());
+    Io:setPinMode(buttonPin, Io:inputPullup())
+)
+
+fun readPinSig (pinNum: uint16) = (
+    Io:digRead(pinNum)
+)
+
+fun checkPinLogic (pinState: pinState) = (
+    if pinState == Io:low()
+    then
+        Io:high()
+    else 
+        Io:low()
+    end
+)
+
+fun button() : sig<mode> = (
+    let buttonSig = Io:digIn(button);
+    let debouncedSig = Button:debounce(buttonSig, bState);
+
+    let edgeSig = Io:fallingEdge(debouncedSig, edgeState);
+
+    Signal:toggle(on(), off(), modeState, edgeSig)
+)
+
+fun loop2() = (
+    let buttonSig = Io:digIn(buttonPin);
+    let debouncedSig = Io:fallingEdge(Button:debounce(buttonSig, bState), edgeState);
+    let ledSig =
+        Signal
+)
+
+fun loop() = (
+    // let buttonASig = readPinSig(buttonAPin);
+    // let buttonBSig = readPinSig(buttonBPin);
+
+    // let newSig = checkPinLogic(buttonASig);
+
+    // Io:digWrite(ledPin, newSig)
+
+    let timerSig = Time:every(1000, tState);
+
+    let ledSig = 
+        Signal:foldP(
+            fn (currentTime, lastState) ->
+                Io:toggle(lastState)
+            end,
+            ledState, timerSig);
+    Io:digOut(ledPin, ledSig)
+)

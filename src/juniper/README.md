@@ -19,3 +19,19 @@ Utilizes an RGB LED. With the following pin connections:
 
 This program just cycles through the color spectrum of the RGB LED.
 
+## toggleLed.jun
+
+Utilizes a LED and a basic button. Anytime the button is pressed/engaged the LED is turned on. When the button is released/disengaged the LED turns off.
+
+* LED utilizes pin 5 with a 220 Ohm resistor
+* Button utilizes pin 9
+
+## digitalInputs.jun
+
+Utilizes a LED and two buttons. When button A is pressed/engaged, the LED is turned on. When button B is pressed/engaged the LED is turned off.
+
+* LED utilizes pin 5 with a 220 Ohm resistor
+* ButtonA utilizes pin 9
+* ButtonB utilizes pin 8
+
+> This is the same circuit as `toggleLed.jun` except with one more button added to pin 8 for explicit on/off support
