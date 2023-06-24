@@ -1,4 +1,4 @@
-//Compiled on 9/3/2022 1:36:11 PM
+//Compiled on 6/24/2023 1:08:28 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -2395,7 +2395,7 @@ namespace Color {
 }
 
 namespace Fade {
-    juniper::unit fadeInFadeOut(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
+    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
 }
 
 namespace Fade {
@@ -6989,7 +6989,7 @@ namespace Fade {
 }
 
 namespace Fade {
-    juniper::unit fadeInFadeOut(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin) {
+    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin) {
         return (([&]() -> juniper::unit {
             uint8_t guid208 = ((uint8_t) 255);
             if (!(true)) {
@@ -7044,9 +7044,9 @@ namespace Fade {
             }
             uint32_t delayTime = guid212;
             
-            fadeInFadeOut(delayTime, redLed, greenLed);
-            fadeInFadeOut(delayTime, greenLed, blueLed);
-            fadeInFadeOut(delayTime, blueLed, redLed);
+            fadeOutFadeIn(delayTime, redLed, greenLed);
+            fadeOutFadeIn(delayTime, greenLed, blueLed);
+            fadeOutFadeIn(delayTime, blueLed, redLed);
             return juniper::unit();
         })());
     }

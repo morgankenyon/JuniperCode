@@ -9,7 +9,7 @@ let greenLed: uint16 = 5
 let redLed: uint16 = 6
 
 //parameterized function, takes Led pin to slowly fade out, and one Led pin to slowly fade in
-fun fadeInFadeOut(delayTime: uint32, fadeOutLedPin: uint16, fadeInLedPin: uint16) = (
+fun fadeOutFadeIn(delayTime: uint32, fadeOutLedPin: uint16, fadeInLedPin: uint16) = (
     let mutable fadeOutValue: uint8 = 255;
     let mutable fadeInValue: uint8 = 0;
     for i : uint16 in 0u16 to 255 - 1 do (
@@ -38,12 +38,12 @@ fun loop() = (
     let delayTime: uint32 = 25;
 
     //fade from red to green
-    fadeInFadeOut(delayTime, redLed, greenLed);
+    fadeOutFadeIn(delayTime, redLed, greenLed);
 
     //fade from green to blue
-    fadeInFadeOut(delayTime, greenLed, blueLed);
+    fadeOutFadeIn(delayTime, greenLed, blueLed);
 
     //fade from blue to red
-    fadeInFadeOut(delayTime, blueLed, redLed);
+    fadeOutFadeIn(delayTime, blueLed, redLed);
     ()
 )
