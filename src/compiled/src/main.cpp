@@ -1,4 +1,4 @@
-//Compiled on 6/24/2023 1:08:28 PM
+//Compiled on 6/24/2023 1:40:45 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -671,7 +671,7 @@ namespace CharList {}
 namespace StringM {}
 namespace Random {}
 namespace Color {}
-namespace Fade {}
+namespace Blink {}
 namespace List {
     using namespace Prelude;
 
@@ -735,10 +735,9 @@ namespace Color {
 
 }
 
-namespace Fade {
+namespace Blink {
     using namespace Prelude;
     using namespace Io;
-    using namespace Time;
 
 }
 
@@ -2394,15 +2393,11 @@ namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
 }
 
-namespace Fade {
-    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin);
-}
-
-namespace Fade {
+namespace Blink {
     juniper::unit setup();
 }
 
-namespace Fade {
+namespace Blink {
     juniper::unit loop();
 }
 
@@ -6976,85 +6971,57 @@ namespace Color {
     })());
 }
 
-namespace Fade {
-    uint16_t blueLed = ((uint16_t) 3);
+namespace Blink {
+    uint16_t ledPin = ((uint16_t) 5);
 }
 
-namespace Fade {
-    uint16_t greenLed = ((uint16_t) 5);
+namespace Blink {
+    uint16_t buttonAPin = ((uint16_t) 9);
 }
 
-namespace Fade {
-    uint16_t redLed = ((uint16_t) 6);
+namespace Blink {
+    uint16_t buttonBPin = ((uint16_t) 8);
 }
 
-namespace Fade {
-    juniper::unit fadeOutFadeIn(uint32_t delayTime, uint16_t fadeOutLedPin, uint16_t fadeInLedPin) {
-        return (([&]() -> juniper::unit {
-            uint8_t guid208 = ((uint8_t) 255);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t fadeOutValue = guid208;
-            
-            uint8_t guid209 = ((uint8_t) 0);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            uint8_t fadeInValue = guid209;
-            
-            return (([&]() -> juniper::unit {
-                uint16_t guid210 = ((uint16_t) 0);
-                uint16_t guid211 = (((uint16_t) 255) - ((uint16_t) 1));
-                for (uint16_t i = guid210; i <= guid211; i++) {
-                    (([&]() -> juniper::unit {
-                        (fadeOutValue = (fadeOutValue - ((uint8_t) 1)));
-                        (fadeInValue = (fadeInValue + ((uint8_t) 1)));
-                        Io::anaWrite(fadeOutLedPin, fadeOutValue);
-                        Io::anaWrite(fadeInLedPin, fadeInValue);
-                        Time::wait(delayTime);
-                        return juniper::unit();
-                    })());
-                }
-                return {};
-            })());
-        })());
-    }
-}
-
-namespace Fade {
+namespace Blink {
     juniper::unit setup() {
         return (([&]() -> juniper::unit {
-            Io::setPinMode(blueLed, Io::output());
-            Io::setPinMode(greenLed, Io::output());
-            Io::setPinMode(redLed, Io::output());
-            Io::digWrite(redLed, Io::high());
-            Io::digWrite(greenLed, Io::low());
-            return Io::digWrite(blueLed, Io::low());
+            Io::setPinMode(ledPin, Io::output());
+            Io::setPinMode(buttonAPin, Io::inputPullup());
+            return Io::setPinMode(buttonBPin, Io::inputPullup());
         })());
     }
 }
 
-namespace Fade {
+namespace Blink {
     juniper::unit loop() {
         return (([&]() -> juniper::unit {
-            uint32_t guid212 = ((uint32_t) 25);
+            Io::pinState guid208 = Io::digRead(buttonAPin);
             if (!(true)) {
                 juniper::quit<juniper::unit>();
             }
-            uint32_t delayTime = guid212;
+            Io::pinState buttonASig = guid208;
             
-            fadeOutFadeIn(delayTime, redLed, greenLed);
-            fadeOutFadeIn(delayTime, greenLed, blueLed);
-            fadeOutFadeIn(delayTime, blueLed, redLed);
-            return juniper::unit();
+            Io::pinState guid209 = Io::digRead(buttonBPin);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            Io::pinState buttonBSig = guid209;
+            
+            return ((buttonASig == Io::low()) ? 
+                Io::digWrite(ledPin, Io::high())
+            :
+                ((buttonBSig == Io::low()) ? 
+                    Io::digWrite(ledPin, Io::low())
+                :
+                    juniper::unit()));
         })());
     }
 }
 
 void setup() {
-    Fade::setup();
+    Blink::setup();
 }
 void loop() {
-    Fade::loop();
+    Blink::loop();
 }

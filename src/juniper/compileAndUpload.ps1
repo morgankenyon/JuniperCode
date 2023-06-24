@@ -2,7 +2,7 @@
 
 Write-Output "Compiling"
 
-Juniper.exe -s fade.jun -o ../compiled/src/main.cpp
+Juniper.exe -s digitalInputs.jun -o ../compiled/src/main.cpp
 
 Write-Output "Compiled to ../compiled/src/main.cpp"
 

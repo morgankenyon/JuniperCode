@@ -1,0 +1,27 @@
+module Blink
+open(Prelude, Io)
+
+let ledPin: uint16 = 5
+let buttonAPin: uint16 = 9
+let buttonBPin: uint16 = 8
+
+fun setup() = (
+    Io:setPinMode(ledPin, Io:output());
+    Io:setPinMode(buttonAPin, Io:inputPullup());
+    Io:setPinMode(buttonBPin, Io:inputPullup())
+)
+
+fun loop() = (
+    let buttonASig = Io:digRead(buttonAPin);
+    let buttonBSig = Io:digRead(buttonBPin);
+
+    if buttonASig == Io:low()
+    then
+        Io:digWrite(ledPin, Io:high())
+    elif buttonBSig == Io:low()
+    then
+        Io:digWrite(ledPin, Io:low())
+    else
+        ()
+    end
+)

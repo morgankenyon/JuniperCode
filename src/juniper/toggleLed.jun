@@ -1,0 +1,21 @@
+module ToggleLed
+open(Prelude, Io, Time)
+
+let ledPin: uint16 = 5
+let buttonPin: uint16 = 9
+
+fun setup() = (
+    Io:setPinMode(ledPin, Io:output());
+    Io:setPinMode(buttonPin, Io:inputPullup())
+)
+
+fun loop() = (
+    let buttonSig = Io:digRead(buttonPin);
+
+    if buttonSig == Io:low()
+    then
+        Io:digWrite(ledPin, Io:high())
+    else
+        Io:digWrite(ledPin, Io:low())
+    end
+)
