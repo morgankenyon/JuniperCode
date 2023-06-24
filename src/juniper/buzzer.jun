@@ -1,0 +1,25 @@
+module Buzzer
+open (Io, Time)
+
+let buzzerPin: uint16 = 12
+
+fun setup() =
+    Io:setPinMode(buzzerPin, Io:output())
+
+fun loop() = (
+    for i : uint16 in 0u16 to 80 - 1 do (
+        Io:digWrite(buzzerPin, Io:high());
+        Time:wait(1);
+        Io:digWrite(buzzerPin, Io:low());
+        Time:wait(1);
+        ()
+    ) end;
+    
+    for i : uint16 in 0u16 to 100 - 1 do (
+        Io:digWrite(buzzerPin, Io:high());
+        Time:wait(2);
+        Io:digWrite(buzzerPin, Io:low());
+        Time:wait(2);
+        ()
+    ) end
+)
