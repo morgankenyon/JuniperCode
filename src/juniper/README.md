@@ -35,3 +35,7 @@ Utilizes a LED and two buttons. When button A is pressed/engaged, the LED is tur
 * ButtonB utilizes pin 8
 
 > This is the same circuit as `toggleLed.jun` except with one more button added to pin 8 for explicit on/off support
+
+## buzzer.jun
+
+Utilizes an active buzzer to generate sound. Buzzer is operated via pin 12. All it does it generate two different sounds and continues looping to do that.

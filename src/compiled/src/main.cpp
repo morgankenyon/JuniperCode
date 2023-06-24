@@ -1,4 +1,4 @@
-//Compiled on 6/24/2023 1:40:45 PM
+//Compiled on 6/24/2023 2:02:52 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -671,7 +671,7 @@ namespace CharList {}
 namespace StringM {}
 namespace Random {}
 namespace Color {}
-namespace Blink {}
+namespace Buzzer {}
 namespace List {
     using namespace Prelude;
 
@@ -735,9 +735,9 @@ namespace Color {
 
 }
 
-namespace Blink {
-    using namespace Prelude;
+namespace Buzzer {
     using namespace Io;
+    using namespace Time;
 
 }
 
@@ -2393,11 +2393,11 @@ namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
 }
 
-namespace Blink {
+namespace Buzzer {
     juniper::unit setup();
 }
 
-namespace Blink {
+namespace Buzzer {
     juniper::unit loop();
 }
 
@@ -6971,57 +6971,54 @@ namespace Color {
     })());
 }
 
-namespace Blink {
-    uint16_t ledPin = ((uint16_t) 5);
+namespace Buzzer {
+    uint16_t buzzerPin = ((uint16_t) 12);
 }
 
-namespace Blink {
-    uint16_t buttonAPin = ((uint16_t) 9);
-}
-
-namespace Blink {
-    uint16_t buttonBPin = ((uint16_t) 8);
-}
-
-namespace Blink {
+namespace Buzzer {
     juniper::unit setup() {
-        return (([&]() -> juniper::unit {
-            Io::setPinMode(ledPin, Io::output());
-            Io::setPinMode(buttonAPin, Io::inputPullup());
-            return Io::setPinMode(buttonBPin, Io::inputPullup());
-        })());
+        return Io::setPinMode(buzzerPin, Io::output());
     }
 }
 
-namespace Blink {
+namespace Buzzer {
     juniper::unit loop() {
         return (([&]() -> juniper::unit {
-            Io::pinState guid208 = Io::digRead(buttonAPin);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Io::pinState buttonASig = guid208;
-            
-            Io::pinState guid209 = Io::digRead(buttonBPin);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Io::pinState buttonBSig = guid209;
-            
-            return ((buttonASig == Io::low()) ? 
-                Io::digWrite(ledPin, Io::high())
-            :
-                ((buttonBSig == Io::low()) ? 
-                    Io::digWrite(ledPin, Io::low())
-                :
-                    juniper::unit()));
+            (([&]() -> juniper::unit {
+                uint16_t guid208 = ((uint16_t) 0);
+                uint16_t guid209 = (((uint16_t) 80) - ((uint16_t) 1));
+                for (uint16_t i = guid208; i <= guid209; i++) {
+                    (([&]() -> juniper::unit {
+                        Io::digWrite(buzzerPin, Io::high());
+                        Time::wait(((uint32_t) 1));
+                        Io::digWrite(buzzerPin, Io::low());
+                        Time::wait(((uint32_t) 1));
+                        return juniper::unit();
+                    })());
+                }
+                return {};
+            })());
+            return (([&]() -> juniper::unit {
+                uint16_t guid210 = ((uint16_t) 0);
+                uint16_t guid211 = (((uint16_t) 100) - ((uint16_t) 1));
+                for (uint16_t i = guid210; i <= guid211; i++) {
+                    (([&]() -> juniper::unit {
+                        Io::digWrite(buzzerPin, Io::high());
+                        Time::wait(((uint32_t) 2));
+                        Io::digWrite(buzzerPin, Io::low());
+                        Time::wait(((uint32_t) 2));
+                        return juniper::unit();
+                    })());
+                }
+                return {};
+            })());
         })());
     }
 }
 
 void setup() {
-    Blink::setup();
+    Buzzer::setup();
 }
 void loop() {
-    Blink::loop();
+    Buzzer::loop();
 }
