@@ -1,4 +1,4 @@
-//Compiled on 9/10/2022 2:20:41 PM
+//Compiled on 9/10/2022 7:30:54 PM
 #include <inttypes.h>
 #include <stdbool.h>
 #include <new>
@@ -671,7 +671,7 @@ namespace CharList {}
 namespace StringM {}
 namespace Random {}
 namespace Color {}
-namespace Blink {}
+namespace ButtonDebounce {}
 namespace List {
     using namespace Prelude;
 
@@ -735,10 +735,10 @@ namespace Color {
 
 }
 
-namespace Blink {
+namespace ButtonDebounce {
     using namespace Prelude;
+    using namespace Button;
     using namespace Io;
-    using namespace Time;
 
 }
 
@@ -2394,20 +2394,12 @@ namespace Color {
     uint16_t rgbToRgb565(juniper::records::recordt_4<uint8_t, uint8_t, uint8_t> color);
 }
 
-namespace Blink {
-    juniper::unit setup();
-}
-
-namespace Blink {
-    Io::pinState readPinSig(uint16_t pinNum);
-}
-
-namespace Blink {
-    Io::pinState checkPinLogic(Io::pinState pinState);
-}
-
-namespace Blink {
+namespace ButtonDebounce {
     juniper::unit loop();
+}
+
+namespace ButtonDebounce {
+    juniper::unit setup();
 }
 
 namespace Prelude {
@@ -6980,72 +6972,67 @@ namespace Color {
     })());
 }
 
-namespace Blink {
+namespace ButtonDebounce {
+    uint16_t buttonPin = ((uint16_t) 9);
+}
+
+namespace ButtonDebounce {
     uint16_t ledPin = ((uint16_t) 5);
 }
 
-namespace Blink {
-    uint16_t buttonAPin = ((uint16_t) 9);
+namespace ButtonDebounce {
+    juniper::shared_ptr<juniper::records::recordt_2<Io::pinState, uint32_t, Io::pinState>> bState = Button::state();
 }
 
-namespace Blink {
-    uint16_t buttonBPin = ((uint16_t) 8);
+namespace ButtonDebounce {
+    juniper::shared_ptr<Io::pinState> edgeState = (juniper::shared_ptr<Io::pinState>(new Io::pinState(Io::low())));
 }
 
-namespace Blink {
-    juniper::unit setup() {
+namespace ButtonDebounce {
+    juniper::shared_ptr<Io::pinState> ledState = (juniper::shared_ptr<Io::pinState>(new Io::pinState(Io::high())));
+}
+
+namespace ButtonDebounce {
+    juniper::unit loop() {
         return (([&]() -> juniper::unit {
-            Io::setPinMode(ledPin, Io::output());
-            Io::setPinMode(buttonAPin, Io::inputPullup());
-            return Io::setPinMode(buttonBPin, Io::inputPullup());
+            Prelude::sig<Io::pinState> guid208 = Io::digIn(buttonPin);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            Prelude::sig<Io::pinState> buttonSig = guid208;
+            
+            Prelude::sig<juniper::unit> guid209 = Io::fallingEdge(Button::debounce(buttonSig, bState), edgeState);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            Prelude::sig<juniper::unit> debouncedSig = guid209;
+            
+            Prelude::sig<Io::pinState> guid210 = Signal::foldP<juniper::unit, Io::pinState, void>(juniper::function<void, Io::pinState(juniper::unit,Io::pinState)>([](juniper::unit event, Io::pinState currentLedState) -> Io::pinState { 
+                return Io::toggle(currentLedState);
+             }), ledState, debouncedSig);
+            if (!(true)) {
+                juniper::quit<juniper::unit>();
+            }
+            Prelude::sig<Io::pinState> ledSig = guid210;
+            
+            return Io::digOut(ledPin, ledSig);
         })());
     }
 }
 
-namespace Blink {
-    Io::pinState readPinSig(uint16_t pinNum) {
-        return Io::digRead(pinNum);
-    }
-}
-
-namespace Blink {
-    Io::pinState checkPinLogic(Io::pinState pinState) {
-        return ((pinState == Io::low()) ? 
-            Io::high()
-        :
-            Io::low());
-    }
-}
-
-namespace Blink {
-    juniper::unit loop() {
+namespace ButtonDebounce {
+    juniper::unit setup() {
         return (([&]() -> juniper::unit {
-            Io::pinState guid208 = readPinSig(buttonAPin);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Io::pinState buttonASig = guid208;
-            
-            Io::pinState guid209 = readPinSig(buttonBPin);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Io::pinState buttonBSig = guid209;
-            
-            Io::pinState guid210 = checkPinLogic(buttonASig);
-            if (!(true)) {
-                juniper::quit<juniper::unit>();
-            }
-            Io::pinState newSig = guid210;
-            
-            return Io::digWrite(ledPin, newSig);
+            Io::setPinMode(ledPin, Io::output());
+            Io::setPinMode(buttonPin, Io::input());
+            return Io::digWrite(ledPin, (*((ledState).get())));
         })());
     }
 }
 
 void setup() {
-    Blink::setup();
+    ButtonDebounce::setup();
 }
 void loop() {
-    Blink::loop();
+    ButtonDebounce::loop();
 }
